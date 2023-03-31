@@ -1,0 +1,207 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/album/">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js " rel="stylesheet"
+        integrity="sha384-1Qo9l9q3YJ2dVU2jWZL4RdYlKu9DgOYVnqQ1t8xwYjZw9OtF1hNU+4R0f+rJv8tJ" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.3/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.3/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.3/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#712cf9">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .news-card {
+            background-color: #ffff;
+        }
+
+        .nav-link {
+            border-right: 1px solid rgba(248, 248, 248, 0.15);
+        }
+
+        .nav-link:last-child {
+            border-right: none;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-link.selected {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+    </style>
+
+    <script>
+        function filterNews(category) {
+            const allLinks = document.querySelectorAll('.nav-link');
+            allLinks.forEach(link => {
+                link.classList.remove('selected');
+                if (link.getAttribute('data-category') === category) {
+                    link.classList.add('selected');
+                }
+            });
+            const allCardColumns = document.querySelectorAll('.news-card-column');
+            allCardColumns.forEach(column => {
+                const card = column.querySelector('.news-card');
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    column.style.display = 'block';
+                } else {
+                    column.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #1b1b1b;">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}"
+                        style="color: #fff; font-size: 1.2rem; font-weight: bold; text-decoration: underline;">The Daily
+                        Life</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="all" onclick="filterNews('all')"
+                        style="color: #fff;">All</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="technology" onclick="filterNews('Technology')"
+                        style="color: #fff;">Technology</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="design" onclick="filterNews('Design')"
+                        style="color: #fff;">Design</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="culture" onclick="filterNews('Culture')"
+                        style="color: #fff;">Culture</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="business" onclick="filterNews('Business')"
+                        style="color: #fff;">Business</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="politics" onclick="filterNews('Politics')"
+                        style="color: #fff;">Politics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="science" onclick="filterNews('Science')"
+                        style="color: #fff;">Science</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="health" onclick="filterNews('Health')"
+                        style="color: #fff;">Health</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="travel" onclick="filterNews('Travel')"
+                        style="color: #fff;">Travel</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-category="sports" onclick="filterNews('Sports')"
+                        style="color: #fff;">Sports</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <form class="form-inline" method="GET" action="{% url 'community' %}">
+                        <input type="search" id="search" name="search" class="form-control rounded-pill"
+                            placeholder="Search" aria-label="Search" oninput="searchNews()">
+                    </form>
+
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link btn btn-primary rounded-pill px-4 py-2 ml-5" href="{% url 'add_news' %}"
+                        style="font-size:1.1rem; font-weight: bold; color:rgb(237, 76, 76);">Add News</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+    </div>
+    </div>
+    </nav>
+    <!-- Main content -->
+    <main style="padding-top: 20px;">
+        <div class="row mb-2 px-4">
+            {% if new_news %}
+            <div class="col-md-6 news-card-column">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative news-card"
+                    data-category="{{ new_news.category }}">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary">{{ new_news.category }}</strong>
+                        <h3 class="mb-0">{{ new_news.title }}</h3>
+                        <div class="mb-1 text-muted">{{ news.created_at|date:"F j, Y" }}</div>
+                        <p class="card-text mb-auto">{{ new_news.text }}</p>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- Other cards for existing news articles -->
+            {% for news in all_news %}
+            <div class="col-md-6 news-card-column">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative news-card"
+                    data-category="{{ news.category }}">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary">{{ news.category }}</strong>
+                        <h3 class="mb-0">{{ news.title }}</h3>
+                        <div class="mb-1 text-muted">{{ news.created_at|date:"F j, Y" }}</div>
+                        <p class="card-text mb-auto">{{ news.text }}</p>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    <script>
+        function searchNews() {
+            const searchInput = document.getElementById('search');
+            const searchQuery = searchInput.value.trim().toLowerCase();
+
+            const newsCards = document.querySelectorAll('.news-card');
+
+            newsCards.forEach((card) => {
+                const title = card.querySelector('h3').textContent;
+                const text = card.querySelector('.card-text').textContent;
+
+                if (title.toLowerCase().includes(searchQuery) || text.toLowerCase().includes(searchQuery)) {
+                    card.parentElement.style.display = 'block';
+                } else {
+                    card.parentElement.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
